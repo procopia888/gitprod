@@ -1,0 +1,53 @@
+#docker build
+docker build -t webapp
+
+#run docker image
+docker image --filter reference=webapp
+
+#run newly built image. the -p 80:80 option maps the exposed port 80 on the container to port 80 on the host system
+#docker run -t -i -p 80:80 webapp
+
+#if you are running docker locally, point browser to http://localhost/
+
+
+#authenticate to your default registry
+#new system new - Access key Secrete for aws cli login
+
+#create your ecr repo
+aws ecr create-repository --repository-name webapp --region us-east-1
+
+#Authenticate your docker to ecr ==> gives encrypted passoword for docker
+aws ec2 get-login-password --region us-east-1
+
+# Final Authenticate to ecr
+aws ecr --region us-east-1 | docker login -u AWS -p  234124.dkr.ecr.us-east-1.amazonaws.com/webapp
+
+
+#docker tag
+docker tag webapp:latest 234124.dkr.ecr.us-east-1.amazonaws.com/webapp:latest
+
+#push docker to ecr
+docker push 234124.dkr.ecr.us-east-1.amazonaws.com/webapp:latest
+
+#create vpc for eks using stackset -- aws cli
+aws cloudformation deploy --template-file <path> --stack-name my-new-stack
+
+#create out cluster on eks
+eksctl create cluster -f cluster.yaml --kubeconfig=C:\users\lenevo\.kube\config
+
+# create our deployment pod
+kubectl apply -f deployment.yaml
+
+#create service
+kubectl apply -f service.yaml
+
+#service created
+kubectl get services
+
+# pods of our application are running
+kubectl get pods -o wide
+
+#get nodes command
+kubectl get nodes -o wide
+
+#
